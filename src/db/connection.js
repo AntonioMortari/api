@@ -1,5 +1,8 @@
 const { Sequelize } = require('sequelize')
 
+// models
+const UserModel = require('../models/UserModel')
+
 const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -13,5 +16,7 @@ try {
     console.log(error)
     throw new Error(error)
 }
+
+
 
 module.exports = sequelize
