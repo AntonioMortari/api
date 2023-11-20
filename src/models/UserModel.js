@@ -32,6 +32,6 @@ const UserModel = sequelize.define('User', {
         defaultValue:''
     }
 
-})
+}, {tableName: 'users'})
 
 module.exports = UserModel

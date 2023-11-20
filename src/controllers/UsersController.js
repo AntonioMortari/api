@@ -98,6 +98,10 @@ class UsersController{
     }
 
     async auth(req,res){
+        
+    }
+
+    async refresh(req,res){
 
     }
 }
