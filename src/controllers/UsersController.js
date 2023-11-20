@@ -1,6 +1,7 @@
 const UserModel = require("../models/UserModel")
 
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 class UsersController{
     async index(req,res){
@@ -98,7 +99,27 @@ class UsersController{
     }
 
     async auth(req,res){
-        
+        const { email, password} = req.body
+
+        //verify user exists
+        const findUser = await UserModel.findOne({where:{email:email}})
+        if(!findUser){
+            return res.status(400).json({message:'Email ou senha incorretos'})
+        }
+
+        //compare passwords
+        const comparePassword = await bcrypt.compare(password, findUser.password)
+        if(!comparePassword){
+            return res.status(400).json({message:'Email ou senha incorretos'})
+        }
+
+        // generate acess token
+
+        const accessToken = jwt.sign({userId: findUser.id, email: findUser.email, name:findUser.name}, process.env.KEY_JWT, {
+            expiresIn: '15m',
+        })
+
+        return res.status(200).json({message:'Autenticado', accessToken:accessToken})
     }
 
     async refresh(req,res){
