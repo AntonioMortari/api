@@ -1,9 +1,13 @@
 const UserModel = require("../models/UserModel")
+const RefreshModel = require('../models/RefreshModel')
 
 const bcrypt = require('bcrypt')
+const uuid = require('uuid')
 const jwt = require('jsonwebtoken')
+const dateFns = require('date-fns')
 
 class UsersController{
+    
     async index(req,res){
         const result = await UserModel.findAll()
 
@@ -115,15 +119,55 @@ class UsersController{
 
         // generate acess token
 
-        const accessToken = jwt.sign({userId: findUser.id, email: findUser.email, name:findUser.name}, process.env.KEY_JWT, {
+        const accessToken = jwt.sign({userId: findUser.id}, process.env.KEY_JWT, {
             expiresIn: '15m',
         })
 
-        return res.status(200).json({message:'Autenticado', accessToken:accessToken})
+        // delete refreshToken
+        await RefreshModel.destroy({
+            where: {user_id : findUser.id}
+        })
+
+        // generate refreshToken
+        const expiresIn = dateFns.addDays(new Date(), 15)
+        const refreshToken = await RefreshModel.create({
+            user_id: findUser.id,
+            expiresIn
+        })
+
+        return res.status(200).json({message:'Autenticado', accessToken:accessToken, refreshToken: refreshToken})
     }
 
     async refresh(req,res){
+        const { refreshToken } = req.body
+        let newRefreshToken;
+        
+        const findToken = await RefreshModel.findByPk(refreshToken, { include: UserModel})
+        if(!findToken){
+            return res.status(400).json({message:'Invalid RefreshToken'})
+        }
 
+        const dataUser = findToken.User.dataValues
+
+        if(!dateFns.isBefore(new Date(), findToken.expiresIn)){
+            // if expired, remove old refresh token, generate new refresh token and save
+
+            await RefreshModel.destroy({where:{id: refreshToken}})
+
+            const expiresIn = dateFns.addDays(new Date(), 15)
+
+            newRefreshToken = await RefreshModel.create({
+                id: uuid.v4(),
+                expiresIn,
+                user_id: findToken.user_id
+            })
+        }
+
+        const newAccessToken = jwt.sign({userId: dataUser.id}, process.env.KEY_JWT, {
+            expiresIn: '15m',
+        })
+
+        return res.status(200).json({accessToken:newAccessToken, refreshToken: newRefreshToken ? newRefreshToken : refreshToken })
     }
 }
 

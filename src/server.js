@@ -12,6 +12,7 @@ app.use(cors())
 const UserModel = require('./models/UserModel')
 const QuestionModel = require('./models/QuestionModel')
 const AnswerModel = require('./models/AnswerModel')
+const RefreshModel = require('./models/RefreshModel')
 
 // connect to db
 const sequelize = require('./db/connection')
@@ -22,6 +23,7 @@ const createTables = async () => {
         await UserModel.sync()
         await QuestionModel.sync()
         await AnswerModel.sync()
+        await RefreshModel.sync()
         console.log('Tabelas criadas com sucesso!')
     } catch (error) {
         console.log(error)
