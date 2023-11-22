@@ -3,10 +3,12 @@ const { Sequelize } = require('sequelize')
 // models
 const UserModel = require('../models/UserModel')
 
+const { DB_NAME, DB_USER, DB_PASSWORD } = require('../config/config')
+
 const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASSWORD,
+    DB_NAME,
+    DB_USER,
+    DB_PASSWORD,
     { dialect: 'mysql', host: 'localhost', port: 3306 })
 
 try {

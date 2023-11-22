@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const uuid = require('uuid')
 const jwt = require('jsonwebtoken')
 const dateFns = require('date-fns')
+const { KEY_JWT } = require("../config/config")
 
 class UsersController{
     
@@ -119,7 +120,7 @@ class UsersController{
 
         // generate acess token
 
-        const accessToken = jwt.sign({userId: findUser.id}, process.env.KEY_JWT, {
+        const accessToken = jwt.sign({userId: findUser.id}, KEY_JWT, {
             expiresIn: '15m',
         })
 
@@ -163,7 +164,7 @@ class UsersController{
             })
         }
 
-        const newAccessToken = jwt.sign({userId: dataUser.id}, process.env.KEY_JWT, {
+        const newAccessToken = jwt.sign({userId: dataUser.id}, KEY_JWT, {
             expiresIn: '15m',
         })
 

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { KEY_JWT } = require('../config/config')
 
 const authMiddleware = (req,res,next) =>{
     const token = req.headers.authorization
@@ -7,7 +8,7 @@ const authMiddleware = (req,res,next) =>{
         return res.status(401).json({message:'Token is missing'})
     }
 
-    jwt.verify(token, process.env.KEY_JWT, (error, decoded ) =>{
+    jwt.verify(token, KEY_JWT, (error, decoded ) =>{
         if(error){
             return res.status(401).json({message:'Invalid Token', error:error})
         }
