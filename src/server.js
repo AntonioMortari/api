@@ -34,7 +34,9 @@ createTables()
 
 // routes
 const usersRoutes = require('./routes/users.routes')
+const questionsRoutes = require('./routes/questions.routes')
 
 app.use('/users', usersRoutes)
+app.use('/questions', questionsRoutes)
 
 app.listen(3000, () => console.log('server is running'))

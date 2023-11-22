@@ -3,11 +3,24 @@ const QuestionModel = require('../models/QuestionModel')
 class QuestionsController{
 
     async index(req,res){
+        const questions = await QuestionModel.findAll()
 
+        res.status(200).json(questions)
+    }
+    async show(req,res){
+        const { id } = req.params
+
+        const question = await QuestionModel.findByPk(id)
+
+        if(!question){
+            res.status(404).json({message:'Pergunta não encontrada'})
+        }
+
+        res.status(200).json(question)
     }
 
-    async show(req,res){
-
+    async create(req,res){
+        const { title, content, image_url} = req.body
     }
 
     async update(req,res){
