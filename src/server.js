@@ -20,10 +20,10 @@ const sequelize = require('./db/connection')
 // create tables
 const createTables = async () => {
     try {
-        await UserModel.sync()
-        await QuestionModel.sync()
-        await AnswerModel.sync()
-        await RefreshModel.sync()
+        await UserModel.sync({force:true})
+        await QuestionModel.sync({force:true})
+        await AnswerModel.sync({force:true})
+        await RefreshModel.sync({force:true})
         console.log('Tabelas criadas com sucesso!')
     } catch (error) {
         console.log(error)

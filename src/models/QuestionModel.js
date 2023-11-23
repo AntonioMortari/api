@@ -2,6 +2,9 @@ const sequelize = require('../db/connection')
 const {DataTypes} = require('sequelize')
 const uuid = require('uuid')
 
+// models
+const UserModel = require('./UserModel')
+
 const QuestionModel = sequelize.define('Question', {
 
     id:{
@@ -30,9 +33,17 @@ const QuestionModel = sequelize.define('Question', {
 
     publication:{
         type:DataTypes.DATE,
-        allowNull:false
+    },
+
+    user_id:{
+        type:DataTypes.STRING,
     }
 
 }, {tableName:'questions'})
+
+QuestionModel.belongsTo(UserModel, {
+    constraints:true,
+    foreignKey:'user_id'
+})
 
 module.exports = QuestionModel

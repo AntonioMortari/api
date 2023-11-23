@@ -8,4 +8,6 @@ const questionController = new QuestionController()
 router.get('/',  questionController.index)
 router.get('/:id', questionController.show)
 
+router.post('/', questionController.create)
+
 module.exports = router

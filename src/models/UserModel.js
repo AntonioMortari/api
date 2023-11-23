@@ -3,6 +3,9 @@ const sequelize = require("../db/connection")
 const {DataTypes} = require('sequelize')
 const uuid = require('uuid')
 
+// models
+const QuestionModel = require('./QuestionModel')
+
 const UserModel = sequelize.define('User', {
 
     id:{
@@ -33,5 +36,10 @@ const UserModel = sequelize.define('User', {
     }
 
 }, {tableName: 'users'})
+
+UserModel.hasMany(QuestionModel, {
+    constraints:true,
+    foreignKey:'user_id'
+})
 
 module.exports = UserModel
