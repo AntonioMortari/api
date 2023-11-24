@@ -11,7 +11,7 @@ class QuestionsController{
     async show(req,res){
         const { id } = req.params
 
-        const question = await QuestionModel.findByPk(id, { include: UserModel})
+        const question = await QuestionModel.findByPk(id)
 
         if(!question){
             res.status(404).json({message:'Pergunta não encontrada'})
@@ -46,7 +46,21 @@ class QuestionsController{
     }
 
     async update(req,res){
+        const { id } = req.params
 
+        // verify question exists
+        const findQuestion = await QuestionModel.findByPk(id)
+        if(!findQuestion){
+            return res.status(404).json({message:'Pergunta não encontrada'})
+        }
+
+        const result = await QuestionModel.update({
+            title: req.body?.title || findQuestion.title,
+            content: req.body?.content || findQuestion.content,
+            image_url: req.body?.image_url|| findQuestion.image_url
+        }, {where:{ id:id}})  
+
+        res.status(200).json({message:`Pergunta de id ${id} atualizada com sucesso`, result:result})
     }
 
     async delete(req,res){

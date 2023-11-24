@@ -5,9 +5,17 @@ const router = express.Router()
 const QuestionController = require('../controllers/QuestionsController')
 const questionController = new QuestionController()
 
-router.get('/',  questionController.index)
+// middlewares
+const authMiddleware = require('../middlewares/auth')
+const upload = require('../middlewares/multer')
+
+router.get('/', questionController.index)
 router.get('/:id', questionController.show)
 
-router.post('/', questionController.create)
+router.post('/', authMiddleware, upload.single('file'), questionController.create)
+
+router.put('/:id', authMiddleware, upload.single('file'), questionController.update)
+
+router.delete('/:id', authMiddleware, questionController.delete)
 
 module.exports = router
