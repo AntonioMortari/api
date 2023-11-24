@@ -23,6 +23,14 @@ const AnswerModel = sequelize.define('Answer', {
     publication:{
         type:DataTypes.DATE,
         allowNull:false
+    },
+    
+    question_id:{
+        type:DataTypes.STRING
+    },
+
+    user_id:{
+        type:DataTypes.STRING
     }
 
 }, { tableName:'answers' })

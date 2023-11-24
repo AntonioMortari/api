@@ -4,6 +4,7 @@ const uuid = require('uuid')
 
 // models
 const UserModel = require('./UserModel')
+const AnswerModel = require('./AnswerModel')
 
 const QuestionModel = sequelize.define('Question', {
 
@@ -41,6 +42,9 @@ const QuestionModel = sequelize.define('Question', {
 
 }, { tableName: 'questions' })
 
-
+QuestionModel.hasMany(AnswerModel, {
+    constraints:true,
+    foreignKey:'question_id'
+})
 
 module.exports = QuestionModel
